@@ -185,17 +185,23 @@ class Image_Functions(commands.Cog):
     @commands.cooldown(1, 12, commands.BucketType.user)
     @commands.group(name="asciiart",aliases=['digital','ascii'],invoke_without_command=True, help=f'Create ASCII art with your avatar or upload an image and convert it into ASCII Art \n\" Yeet asciiart  \" or \"Yeet asciiart custom \" for converting uploaded images \n Alias: Digital,Ascii')
     async def ascii(self,ctx,member:discord.Member=None):
-        member = member or ctx.author 
-        asset = member.avatar_url_as(static_format="png")
-        colours_list=await self.ascii_colour_finding_function(ctx)
-        bytes = await asset.read()
-        async with ctx.typing():
-            with Image.open(BytesIO(bytes)) as my_image:   
-                Final_Image=utils.image_effects.asciiart(my_image,SC = 0.40,GCF= 1.5, color1=colours_list[0], color2=colours_list[1], bgcolor=colours_list[2])
-            output_buffer = BytesIO()
-            Final_Image.save(output_buffer, "png")  # or whatever format
-            output_buffer.seek(0)
-        await ctx.send(file=discord.File(fp=output_buffer, filename="ascii_art.png"))       
+        if ctx.guild.id=="":
+            member = member or ctx.author 
+            asset = member.avatar_url_as(static_format="png")
+            colours_list=await self.ascii_colour_finding_function(ctx)
+            bytes = await asset.read()
+            async with ctx.typing():
+                with Image.open(BytesIO(bytes)) as my_image:   
+                    Final_Image=utils.image_effects.asciiart(my_image,SC = 0.40,GCF= 1.5, color1=colours_list[0], color2=colours_list[1], bgcolor=colours_list[2])
+                output_buffer = BytesIO()
+                Final_Image.save(output_buffer, "png")  # or whatever format
+                output_buffer.seek(0)
+            await ctx.send(file=discord.File(fp=output_buffer, filename="ascii_art.png"))   
+        else:    
+            embed=discord.Embed(color = random.choice(colourlist),timestamp=ctx.message.created_at)
+            embed.add_field(name="Not setup as a premium server",value=f"{ctx.author.mention},{ctx.guild.name} is not a premium server.the ASCII command can only be used by premium servers") 
+            author_avatar=ctx.author.avatar_url
+            embed.set_footer(icon_url= author_avatar,text=f"Requested by {ctx.message.author} • Yeet Bot ")
     
     @ascii.command(name="image",aliases=['upload','custom'])
     async def ascii_upload(self,ctx):

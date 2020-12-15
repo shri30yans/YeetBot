@@ -632,79 +632,72 @@ class Games(commands.Cog):
         -It is recommended to that sending any attachments or embeding links should be disabled in that channel.  ''')
     async def OWS(self,ctx,num:int=1000):
         #https://github.com/JTexpo/Robobert/blob/56a2636871a3801994ed6210664a1069e73b75a5/OWS.py#L108
-        if ctx.channel.name == "one-word-story":
-            if ctx.message.author.guild_permissions.manage_messages == True:
-                question_embed=await ctx.send(embed=discord.Embed(title ="**Enter the name of the story below:**",description="Please keep the title short.",color = random.choice(colourlist),timestamp=ctx.message.created_at).set_footer(icon_url= ctx.author.avatar_url,text=f"Requested by {ctx.message.author} • Yeet Bot "))
-                
-                try:
-                    story_name = await self.bot.wait_for('message', timeout=60.0, check=lambda m:(ctx.author == m.author and ctx.channel == m.channel))
-                except asyncio.TimeoutError:
-                    await question_embed.edit(embed=discord.Embed(title ="Timeout Error",description="You took too much time, ya retarded monkey",color = random.choice(colourlist),timestamp=ctx.message.created_at)).set_footer(icon_url= ctx.author.avatar_url,text=f"Requested by {ctx.message.author} • Yeet Bot ")
-                else: 
-                    story_name=story_name.content
-                    story_name=story_name.upper()
-                    async with ctx.typing():
-                        messages=await ctx.channel.history(limit=num).flatten() 
-                        story,authors=[],[] 
-                        for msg in messages:
-                            if (msg.content.startswith("--") or msg.content.endswith("--")) :
-                                break
-                            elif msg.content.startswith("//"): pass
-                            else:
-                                story.append(msg.content)
-                                authors.append(msg.author.mention)
-                        authors = list(OrderedDict.fromkeys(authors))
-                        del story[0 : 4] 
-                        story.reverse()
-                        length=0
-                        page=""
-                        cut_story=[]
-                        for elem in story:
-                            length=length+len(str(elem))+1
-                            if length<1000:
-                                page=page+ " " + str(elem)
-                                
-                            else:
-                                cut_story.append(page)
-                                page=str(elem)+ " "
-                                length=0
-                        cut_story.append(page)
-                        embeds_list = []
-                        for embed_string in cut_story:
-                            cut_story_index=cut_story.index(embed_string)
-                            embeds_list.append(discord.Embed(title =f"{story_name}",color = random.choice(colourlist),timestamp=ctx.message.created_at).add_field(name=f"Page: {cut_story_index+1} of {len(cut_story)}",value=f"{embed_string}\n").set_footer(icon_url= ctx.author.avatar_url,text=f"Requested by {ctx.message.author} • Yeet Bot "))
-                        embeds_list.append(discord.Embed(title =f"Authors:",color = random.choice(colourlist),timestamp=ctx.message.created_at).add_field(name=f"Authors of this amazing story:",value=f"{str(authors)[1:-1]}").set_footer(icon_url= ctx.author.avatar_url,text=f"Requested by {ctx.message.author} • Yeet Bot "))
-                        menu = menus.MenuPages(EmbedPageSource(embeds_list, per_page=1))
-                        await menu.start(ctx)
-                        #await ctx.send("-------- 《 𝕾𝖙𝖆𝖗𝖙 𝖙𝖍𝖊 𝖓𝖊𝖜 𝖘𝖙𝖔𝖗𝖞 𝖇𝖊𝖑𝖔𝖜 𝖙𝖍𝖎𝖘. 》--------")
-                        await ctx.send("\n\u200b\n\u200b\n\u200b-------- 《 Start the new story below this. 》--------")
+        if ctx.message.author.guild_permissions.manage_messages == True:
+            question_embed=await ctx.send(embed=discord.Embed(title ="**Enter the name of the story below:**",description="Please keep the title short.",color = random.choice(colourlist),timestamp=ctx.message.created_at).set_footer(icon_url= ctx.author.avatar_url,text=f"Requested by {ctx.message.author} • Yeet Bot "))
+            
+            try:
+                story_name = await self.bot.wait_for('message', timeout=60.0, check=lambda m:(ctx.author == m.author and ctx.channel == m.channel))
+            except asyncio.TimeoutError:
+                await question_embed.edit(embed=discord.Embed(title ="Timeout Error",description="You took too much time, ya retarded monkey",color = random.choice(colourlist),timestamp=ctx.message.created_at)).set_footer(icon_url= ctx.author.avatar_url,text=f"Requested by {ctx.message.author} • Yeet Bot ")
+            else: 
+                story_name=story_name.content
+                story_name=story_name.upper()
+                async with ctx.typing():
+                    messages=await ctx.channel.history(limit=num).flatten() 
+                    story,authors=[],[] 
+                    for msg in messages:
+                        if (msg.content.startswith("--") or msg.content.endswith("--")) :
+                            break
+                        elif msg.content.startswith("//"): pass
+                        else:
+                            story.append(msg.content)
+                            authors.append(msg.author.mention)
+                    authors = list(OrderedDict.fromkeys(authors))
+                    del story[0 : 4] 
+                    story.reverse()
+                    length=0
+                    page=""
+                    cut_story=[]
+                    for elem in story:
+                        length=length+len(str(elem))+1
+                        if length<1000:
+                            page=page+ " " + str(elem)
+                            
+                        else:
+                            cut_story.append(page)
+                            page=str(elem)+ " "
+                            length=0
+                    cut_story.append(page)
+                    embeds_list = []
+                    for embed_string in cut_story:
+                        cut_story_index=cut_story.index(embed_string)
+                        embeds_list.append(discord.Embed(title =f"{story_name}",color = random.choice(colourlist),timestamp=ctx.message.created_at).add_field(name=f"Page: {cut_story_index+1} of {len(cut_story)}",value=f"{embed_string}\n").set_footer(icon_url= ctx.author.avatar_url,text=f"Requested by {ctx.message.author} • Yeet Bot "))
+                    embeds_list.append(discord.Embed(title =f"Authors:",color = random.choice(colourlist),timestamp=ctx.message.created_at).add_field(name=f"Authors of this amazing story:",value=f"{str(authors)[1:-1]}").set_footer(icon_url= ctx.author.avatar_url,text=f"Requested by {ctx.message.author} • Yeet Bot "))
+                    menu = menus.MenuPages(EmbedPageSource(embeds_list, per_page=1))
+                    await menu.start(ctx)
+                    #await ctx.send("-------- 《 𝕾𝖙𝖆𝖗𝖙 𝖙𝖍𝖊 𝖓𝖊𝖜 𝖘𝖙𝖔𝖗𝖞 𝖇𝖊𝖑𝖔𝖜 𝖙𝖍𝖎𝖘. 》--------")
+                    await ctx.send("\n\u200b\n\u200b\n\u200b-------- 《 Start the new story below this. 》--------")
 
 
-
-            else:
-                embed=discord.Embed(color = random.choice(colourlist),timestamp=ctx.message.created_at)
-                embed.add_field(name="No Permissions",value=f"{ctx.author.mention} You need the Manage Messages permission to use this command. Your command will be deleted.\n To learn more about this command type \"yeet help ows-end\"") 
-                author_avatar=ctx.author.avatar_url
-                embed.set_footer(icon_url= author_avatar,text=f"Requested by {ctx.message.author} • Yeet Bot ")   
-
-                try:
-                    await ctx.message.delete()
-                except:
-                    except_embed=discord.Embed(color = random.choice(colourlist),timestamp=ctx.message.created_at)
-                    except_embed.add_field(name="No Permissions",value="To use this command I need the Manage Messages permission.\n Please contact your Administrators.\n To learn more about this command type \"yeet help ows-end\"") 
-                    author_avatar=ctx.author.avatar_url
-                    except_embed.set_footer(icon_url= author_avatar,text=f"Requested by {ctx.message.author} • Yeet Bot ")
-                    await ctx.send(embed=except_embed) 
-
-                finally:
-                    await ctx.send(embed=embed,delete_after=4)
 
         else:
             embed=discord.Embed(color = random.choice(colourlist),timestamp=ctx.message.created_at)
-            embed.add_field(name="Wrong Channel",value=f"This channel is not set up as a one-word-story channel.\n To set up a channel as a OWS channel, name it \"one-word-story\" \n To learn more about this command type \"yeet help ows-end\"") 
+            embed.add_field(name="No Permissions",value=f"{ctx.author.mention} You need the Manage Messages permission to use this command. Your command will be deleted.\n To learn more about this command type \"yeet help ows-end\"") 
             author_avatar=ctx.author.avatar_url
-            embed.set_footer(icon_url= author_avatar,text=f"Requested by {ctx.message.author} • Yeet Bot ")
-            await ctx.send(embed=embed) 
+            embed.set_footer(icon_url= author_avatar,text=f"Requested by {ctx.message.author} • Yeet Bot ")   
+
+            try:
+                await ctx.message.delete()
+            except:
+                except_embed=discord.Embed(color = random.choice(colourlist),timestamp=ctx.message.created_at)
+                except_embed.add_field(name="No Permissions",value="To use this command I need the Manage Messages permission.\n Please contact your Administrators.\n To learn more about this command type \"yeet help ows-end\"") 
+                author_avatar=ctx.author.avatar_url
+                except_embed.set_footer(icon_url= author_avatar,text=f"Requested by {ctx.message.author} • Yeet Bot ")
+                await ctx.send(embed=except_embed) 
+
+            finally:
+                await ctx.send(embed=embed,delete_after=4)
+ 
 
     ''' @commands.Cog.listener()
     async def on_message(self, ctx):
