@@ -8,6 +8,7 @@ reddit = praw.Reddit(
      client_id="us0vshvKCbFtaQ",
      client_secret="gAgY9u07CSK3nUqWRkCPbvvvqSvEzA",
      user_agent="u/Shri30yans Yeet Bot",
+     check_for_async=False
  )
 
 class Memes(commands.Cog):
@@ -35,7 +36,6 @@ class Memes(commands.Cog):
             random_subreddit=random.choice(memes_subreddits_list)
             url="https://www.reddit.com/r/"+ random_subreddit
             url=url + "/new.json?sort=hot"
-
             async with cs.get(url) as r:
                 res = await r.json()
                 embed = discord.Embed(title = "Meme", color = random.choice(colourlist),timestamp=ctx.message.created_at)

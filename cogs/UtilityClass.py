@@ -1,5 +1,6 @@
 import os,sys,discord,platform,random,aiohttp,json,time,asyncio,textwrap,aiowiki
 from discord.ext import commands,tasks
+from discord.utils import get
 #from googletrans import Translator
 
 colourlist=[0xCCFF00,0x00C2C7,0x006163,0xE67E22,0xC14DF0,0xEC4451,0xFAED2E,0x2E75FA,0xFA782E,
@@ -175,16 +176,16 @@ class Utility(commands.Cog):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="Vote", help='Where to vote for me. \n Yeet Vote')
     async def vote(self,ctx):
-        vote_gifs=["https://media.tenor.com/images/a5721ade2ad3e7a1a3b45e73b1cd7ed1/tenor.gif",
-                    "https://media1.tenor.com/images/5c9138f8641b2fcfec578c435f05eb7c/tenor.gif?itemid=8850374",
-                    "https://media1.tenor.com/images/6531e425d01ecb64f5f98671b3b0748e/tenor.gif?itemid=8098999",
-                    "https://media1.tenor.com/images/298bfa6dfd5d4539b0d7cff77b030918/tenor.gif?itemid=13876326",
-                    "https://media1.tenor.com/images/887f922eed1f9739842d10102ecd650e/tenor.gif?itemid=17361623",
-                    "https://media1.tenor.com/images/b2d694309cd638f5b96efa7d9c3cde2a/tenor.gif?itemid=13202036",
-                    "https://media.tenor.com/images/be8559bc58ab754e11333ee79a013e1f/tenor.gif",
-                    "https://media.tenor.com/images/dc3308583e3dca9ca0e494c0a58c493d/tenor.gif",
+        # vote_gifs=["https://media.tenor.com/images/a5721ade2ad3e7a1a3b45e73b1cd7ed1/tenor.gif",
+        #             "https://media1.tenor.com/images/5c9138f8641b2fcfec578c435f05eb7c/tenor.gif?itemid=8850374",
+        #             "https://media1.tenor.com/images/6531e425d01ecb64f5f98671b3b0748e/tenor.gif?itemid=8098999",
+        #             "https://media1.tenor.com/images/298bfa6dfd5d4539b0d7cff77b030918/tenor.gif?itemid=13876326",
+        #             "https://media1.tenor.com/images/887f922eed1f9739842d10102ecd650e/tenor.gif?itemid=17361623",
+        #             "https://media1.tenor.com/images/b2d694309cd638f5b96efa7d9c3cde2a/tenor.gif?itemid=13202036",
+        #             "https://media.tenor.com/images/be8559bc58ab754e11333ee79a013e1f/tenor.gif",
+        #             "https://media.tenor.com/images/dc3308583e3dca9ca0e494c0a58c493d/tenor.gif",
 
-                    ]
+        #             ]
         embed=discord.Embed(title="Vote",description="[If you like Yeet Bot, vote for me on Top.gg to support me.](https://top.gg/bot/750236220595896370/vote)",color = random.choice(colourlist),timestamp=ctx.message.created_at)
         author_avatar=ctx.author.avatar_url
         #embed.set_image(url=str(random.choice(vote_gifs))) 
@@ -248,11 +249,12 @@ class Utility(commands.Cog):
         embed.set_footer(text="| Yeet Bot |")
         await ctx.send(embed=embed)'''
     
+    @commands.has_permissions(manage_messages=True)
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="Warn", help='Warns a user to stop doing a certain activity \n \"Yeet Warn @User <reason>\" or \"Yeet Warn @User @User <reason>\"')
     async def warn(self,ctx, members: commands.Greedy[discord.Member], *, reason='violation of rules'):
-        if ctx.message.author.guild_permissions.manage_messages == True or ctx.author.id == 571957935270395925 :
             warned_names=""
+            disabled_dm=""
             for mbr in members:
                 
                 if mbr == ctx.author: pass
@@ -261,108 +263,314 @@ class Utility(commands.Cog):
                 
                 elif mbr.top_role < ctx.author.top_role or ctx.author==ctx.guild.owner:
                     embed=discord.Embed(color = random.choice(colourlist),timestamp=ctx.message.created_at)
-                    embed.add_field(name="<:warn:779698024212463637> | Warning",value=f"You have been warned for \"**{reason}**\" in \"**{ctx.guild.name}**\". Repeated violation of rules could lead to a ban. Please ensure such behaviour is not repeated again.") 
+                    embed.add_field(name="<:warn:789487083802460200> | Warning",value=f"You have been warned for \"**{reason}**\" in \"**{ctx.guild.name}**\". Repeated violation of rules could lead to a ban. Please ensure such behaviour is not repeated again.") 
 
                     author_avatar=ctx.author.avatar_url
                     embed.set_footer(icon_url= author_avatar,text=f"Requested by {ctx.message.author} • Yeet Bot ") 
-                    await mbr.send(embed=embed)
-                    warned_names=warned_names+mbr.name+", "
+                    try:
+                        await mbr.send(embed=embed)
+                        warned_names=warned_names+mbr.name+", "
+                    except:
+                        disabled_dm=disabled_dm+mbr.name+", "
+
 
                 else: pass
             
             embed=discord.Embed(color = random.choice(colourlist),timestamp=ctx.message.created_at)
             if warned_names=="":
-                embed.add_field(name="<:warn:779698024212463637> | Warn Command not Executed",value=f"Nobody was warned.This could be the cause of :\n • Mentioned user is not found.\n • Mentioned user is are above/equal to your role.\n • Mentioned User is a bot\n • You mentioned yourself (in that case you need to go get your brain checked up).")
+                if disabled_dm != "":
+                    embed.add_field(name="<:warn:789487083802460200> | Warn Command not Executed",value=f"\"**{disabled_dm}**\" has either blocked the bot or has disabled DM's.")
+                else:
+                    embed.add_field(name="<:warn:789487083802460200> | Warn Command not Executed",value=f"Nobody was warned.This could be the cause of :\n • Mentioned user is not found.\n • Mentioned user is are above/equal to your role.\n • Mentioned User is a bot\n • You mentioned yourself (in that case you need to go get your brain checked up).")
             else:
-                embed.add_field(name="<:warn:779698024212463637> | Warn Command Executed",value=f"Warned \"**{warned_names}**\" for \"**{reason}**\".")
+                if disabled_dm=="":
+                    embed.add_field(name="<:warn:789487083802460200> | Warn Command Executed",value=f"Warned \"**{warned_names}**\" for \"**{reason}**\".")
+                else:
+                    embed.add_field(name="<:warn:789487083802460200> | Warn Command Executed",value=f"Warned \"**{warned_names}**\" for \"**{reason}**\".")
             embed.set_footer(icon_url= ctx.author.avatar_url,text=f"Requested by {ctx.message.author} • Yeet Bot ")    
             await ctx.send(embed=embed)
         
-        else:
-            embed=discord.Embed(color = random.choice(colourlist),timestamp=ctx.message.created_at)
-            embed.add_field(name="No Permissions",value=f"{ctx.author.mention} You need the Manage Messages permission to use this command.") 
-            author_avatar=ctx.author.avatar_url
-            embed.set_footer(icon_url= author_avatar,text=f"Requested by {ctx.message.author} • Yeet Bot ")   
-            await ctx.send(embed=embed)
-
+    @commands.has_permissions(ban_members=True)
+    @commands.bot_has_permissions(ban_members=True)
     @commands.cooldown(1, 10, commands.BucketType.user)
-    #@bot.has_permissions(ban_members=True)
     @commands.command(name="Ban", help='Bans a user \n\" Yeet Ban @User <reason>\" or \"Yeet Ban @User @User <reason>\"')
     async def ban(self,ctx, members: commands.Greedy[discord.Member], *, reason='violation of rules'):
-        if ctx.message.author.guild_permissions.ban_members == True or ctx.author.id == 571957935270395925 :
             warned_names=""
             for mbr in members:
                 if mbr == ctx.author: pass
-                
-                elif mbr.bot: pass
                 
                 elif mbr.top_role < ctx.author.top_role or ctx.author==ctx.guild.owner:
                     embed=discord.Embed(color = random.choice(colourlist),timestamp=ctx.message.created_at)
                     embed.add_field(name="<a:YB_Wumpus_Ban:781419747878633492> | Banned",value=f"You have been banned for \"**{reason}**\" in \"**{ctx.guild.name}**\".") 
                     author_avatar=ctx.author.avatar_url
                     embed.set_footer(icon_url= author_avatar,text=f"Requested by {ctx.message.author} • Yeet Bot ") 
-                    await mbr.send(embed=embed)
-                    try : await ctx.guild.ban(mbr)
-                    except : await ctx.send("Failed to Ban!")
-                    warned_names=warned_names+mbr.name+", "
+                    try:
+                        await mbr.send(embed=embed)
+                    except:pass
+
+                    try :
+                        await ctx.guild.ban(mbr)
+                    except:
+                        await ctx.send("Failed to Ban!")
+
                 
                 else:pass
             
             embed=discord.Embed(color = random.choice(colourlist),timestamp=ctx.message.created_at)
             if warned_names=="":
-                embed.add_field(name="<a:YB_Wumpus_Ban:781419747878633492> | Ban command not Executed",value=f"Nobody was banned.This could be the cause of :\n • Mentioned user is not found.\n • Mentioned user is are above/equal to your role.\n • Mentioned User is a bot\n • You mentioned yourself (in that case you need to go get your brain checked up).")
+                embed.add_field(name="<a:YB_Wumpus_Ban:781419747878633492> | Ban command not Executed",value=f"Nobody was banned.This could be the cause of :\n • Mentioned user is not found.\n • Mentioned user is are above/equal to your role.\n • You mentioned yourself (in that case you need to go get your brain checked up).\n**Make sure the user you are trying to kick is below my highest role.**")
             else:
                 embed.add_field(name="<a:YB_Wumpus_Ban:781419747878633492> | Banned command Executed",value=f" \"**{warned_names}**\"was banned for \"**{reason}**\".")
             embed.set_footer(icon_url= ctx.author.avatar_url,text=f"Requested by {ctx.message.author} • Yeet Bot ")    
             await ctx.send(embed=embed)
-        
-        else:
-            embed=discord.Embed(color = random.choice(colourlist),timestamp=ctx.message.created_at)
-            embed.add_field(name="No Permissions",value=f"{ctx.author.mention} You need the Ban Members permission to use this command.") 
-            author_avatar=ctx.author.avatar_url
-            embed.set_footer(icon_url= author_avatar,text=f"Requested by {ctx.message.author} • Yeet Bot ")   
-            await ctx.send(embed=embed,delete_after=4)     
-    
+           
+    @commands.has_permissions(ban_members=True)
+    @commands.bot_has_permissions(ban_members=True)
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="Kick", help='Kicks a user \n \"Yeet Ban @User <reason>\" or \"Yeet Kick @User @User <reason>\"')
     async def kick(self,ctx, members: commands.Greedy[discord.Member], *, reason='violation of rules'):
-        if ctx.message.author.guild_permissions.ban_members == True or ctx.author.id == 571957935270395925 :
             warned_names=""
             for mbr in members:
                 
                 if mbr == ctx.author: pass
                 
                 elif mbr.top_role < ctx.author.top_role or ctx.author==ctx.guild.owner:
-                    try:
                         embed=discord.Embed(color = random.choice(colourlist),timestamp=ctx.message.created_at)
-                        embed.add_field(name=":boot: | Kicked",value=f"You have been kicked from \"**{ctx.guild.name}**\ for \"**{reason}**\".") 
+                        embed.add_field(name=":boot: | Kicked",value=f"You have been kicked from \"**{ctx.guild.name}**\" for \"**{reason}**\".") 
                         author_avatar=ctx.author.avatar_url
                         embed.set_footer(icon_url= author_avatar,text=f"Requested by {ctx.message.author} • Yeet Bot ") 
-                        await mbr.send(embed=embed)
+                        
+                        try:await mbr.send(embed=embed)
+                        except: pass
+                        
                         try : await mbr.kick(reason=reason)
                         except : await ctx.send("Failed to Kick!")
                         warned_names=warned_names+mbr.name+", "
-                    except:
-                        await ctx.send("Failed to Kick!")
-                    else:
-                        await mbr.kick(reason=reason)
 
                 else: pass
             
             embed=discord.Embed(color = random.choice(colourlist),timestamp=ctx.message.created_at)
             if warned_names=="":
-                embed.add_field(name=":boot: | Kick command not Executed",value=f"Nobody was kicked.This could be the cause of :\n • Mentioned user is not found.\n • Mentioned user is are above/equal to your role.\n • Mentioned User is a bot\n • You mentioned yourself (in that case you need to go get your brain checked up).")
+                embed.add_field(name=":boot: | Kick command not Executed",value=f"Nobody was kicked.This could be the cause of :\n • Mentioned user is not found.\n • Mentioned user is are above/equal to your role.\n • You mentioned yourself (in that case you need to go get your brain checked up). \n **Make sure the user you are trying to kick is below my highest role.**")
             else:
                 embed.add_field(name=":boot: | Kick command Executed",value=f" \"**{warned_names}**\"was kicked for \"**{reason}**\".")
             embed.set_footer(icon_url= ctx.author.avatar_url,text=f"Requested by {ctx.message.author} • Yeet Bot ")    
             await ctx.send(embed=embed)
-        
-        else:
+    
+    @commands.has_permissions(manage_messages=True)
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="Giveaway", help='Creates a giveaway \n \"Yeet giveaway\"')
+    async def giveaway(self,ctx):
+        channel = await self.text_input_function(ctx,title="Which channel do you want your giveaway to be in?",text="Mention the channel in which the giveaway would be created.")
+        channel=await commands.TextChannelConverter().convert(ctx,channel)
+        prize = await self.text_input_function(ctx,title="What is the prize for the Giveaway?",text="Enter what is the prize.")
+        no_of_winners = int(await self.text_input_function(ctx,title="How many winners do you want?",text="Enter a number. Negative numbers and Zero is not allowed."))
+        if no_of_winners < 0 :
+            await ctx.send("You can't have a negative winner, dude.")
+        elif no_of_winners == 0 :
+            await ctx.send("No winner?You need to have atleast 1 winner, dumbo.")
+        time = await self.text_input_function(ctx,title="How long will the giveaway last?",text="Enter the time")
+        pos = ["s","m","h","d"]
+        time_dict = {"s" : 1, "m" : 60, "h" : 3600, "d": 3600*24}
+        unit = time[-1]
+        if unit not in pos:
+            await ctx.send(f"You didn't answer with a proper unit. Use (s|m|h|d) next time!")
+            return
+        try:
+            val = int(time[:-1])
+        except:
+            await ctx.send(f"The time can only be an integer. Please enter an integer next time.")
+            return
+
+        time_secs= val * time_dict[unit]
+        #print(channel)
+        #giveaway_msg = await channel.send(f"{prize} is being given away for {time}")
+        embed=discord.Embed(title=f":gift: |  Giveaway!",description=f"{prize}",color = 0xFF0000)
+        if no_of_winners == 1:
+            embed.add_field(name="React with :tada: to enter!",value=f"{no_of_winners} winner")
+        elif no_of_winners > 1:
+            embed.add_field(name="React with :tada: to enter!",value=f"{no_of_winners} winners")
+        embed.set_footer(text=f"Ends in {time} • Yeet Bot ")    
+        giveaway_msg=await channel.send(embed=embed)
+        await giveaway_msg.add_reaction("\U0001f389")
+        await asyncio.sleep(int(time_secs))
+        # print(giveaway_msg.reactions)
+        # winner=random.choice(giveaway_msg.reactions)
+        # await ctx.send(f"{winner.user.mention} won the giveaway")
+        giveaway_msg = await channel.fetch_message(giveaway_msg.id)
+        users = await giveaway_msg.reactions[0].users().flatten()
+        users.pop(users.index(self.bot.user))
+        if no_of_winners > len(users):
+            no_of_winners = len(users)
+        winner = random.sample(users,k=no_of_winners)
+        winner_list=""
+        for user in winner:
+            winner_list= winner_list + user.mention
+        embed=discord.Embed(title=f":tada: |  Giveaway ended.",description=f"{prize}",color = 0xFF0000)
+        embed.add_field(name=f":trophy: Winner: ",value=f"{winner_list} won {prize}!")
+        embed.set_footer(text=f"Ended • Yeet Bot ")    
+        await giveaway_msg.edit(embed=embed)
+        await channel.send(f"Congratulations! {winner_list} won {prize}!")
+    
+    # @commands.has_permissions(manage_messages=True)
+    # @commands.cooldown(1, 10, commands.BucketType.user)
+    # @commands.command(name="Poll", help='Creates a giveaway \n \"Yeet giveaway\"')
+    # async def poll(self,ctx):
+    #     channel = await self.text_input_function(ctx,title="Which channel do you want your giveaway to be in?",text="Mention the channel in which the giveaway would be created.")
+    #     channel =await commands.TextChannelConverter().convert(ctx,channel)
+    #     embed=discord.Embed(title="Poll",description=f"React to this message to participate in this poll.",color = random.choice(colourlist),timestamp=ctx.message.created_at)
+    #     option_count=1
+    #     while True:
+    #         question = poll_text_input_function(option_count)
+    #         await question.edit(embed=discord.Embed(title ="Poll",description=f"React to this message for the choice \"{question}\"",color = random.choice(colourlist),timestamp=ctx.message.created_at).set_footer(icon_url= ctx.author.avatar_url,text=f"Requested by {ctx.message.author} • Yeet Bot "))
+    #         embed.add_field(name=f"Option {option_count}:",value=question)
+
+    #     async def poll_text_input_function(option_count):
+    #         question_embed=await ctx.send(embed=discord.Embed(title ="Poll",description=f"What's option {option_count}?",color = random.choice(colourlist),timestamp=ctx.message.created_at).set_footer(icon_url= ctx.author.avatar_url,text=f"Requested by {ctx.message.author} • Yeet Bot "))
+    #         try:
+    #             text= await self.bot.wait_for('message', timeout=30.0, check=lambda m:(ctx.author == m.author and ctx.channel == m.channel))
+    #         except asyncio.TimeoutError:
+    #             await question_embed.edit(embed=discord.Embed(title ="Timeout Error",description="You took too much time, ya retarded monkey",color = random.choice(colourlist),timestamp=ctx.message.created_at).set_footer(icon_url= ctx.author.avatar_url,text=f"Requested by {ctx.message.author} • Yeet Bot "))
+    #         else: 
+    #             if len(text.content)> 50:
+    #                 embed=discord.Embed(title="<:warn:789487083802460200> | Too many Characters ",description="How many letters will you type, you retard?",color = random.choice(colourlist))
+    #                 embed.add_field(name="Type only 50 characters in your sentence.",value=f"You typed {len(text.content)} letters, dumbshit! Type the text again.", inline=False)
+    #                 embed.set_footer(icon_url= ctx.author.avatar_url,text=f"Requested by {ctx.message.author} • Yeet Bot ")
+    #                 await ctx.send(embed=embed)
+    #                 return await poll_text_input_function(option_count)
+    #             else:
+    #                 return str(text.content)
+                
+                
+
+
+   
+    @commands.has_permissions(manage_roles=True)
+    @commands.bot_has_permissions(manage_roles=True)
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="Mute", help='Mutes a user \n \"Yeet Mute @User 5m\" or \"Yeet mute @User @User 10m\". Time can be entered in (s|m|h|d), Default time is 10 mins.')
+    async def mute(self,ctx,members: commands.Greedy[discord.Member],time:str="5m"):
+            warned_names=""
+            pos = ["s","m","h","d"]
+            time_dict = {"s" : 1, "m" : 60, "h" : 3600, "d": 3600*24}
+            unit = time[-1]
+            if unit not in pos:
+                await ctx.send(f"You didn't answer with a proper unit. Use (s|m|h|d) next time!")
+                return
+            try:
+                val = int(time[:-1])
+            except:
+                await ctx.send(f"The time can only be an integer. Please enter an integer next time.")
+                return
+            time_secs= val * time_dict[unit]
+            
+            #role = discord.Guild.get_role(self,role_id=748786284385796123)
+            role = get(ctx.guild.roles, id=748786284385796123)
+            if role == None:
+                role = discord.utils.get(ctx.guild.roles, name="Muted")
+                if role == None:
+                    await ctx.send("The muted role was not found.")
+                    return
+            #role = discord.utils.get(ctx.guild.roles, name="Muted")
+            
+            for mbr in members:
+                
+                if mbr == ctx.author: pass
+                
+                elif mbr.top_role < ctx.author.top_role or ctx.author==ctx.guild.owner:
+                    
+                    embed=discord.Embed(color = random.choice(colourlist),timestamp=ctx.message.created_at)
+                    embed.add_field(name=":mute: | Muted",value=f"You have been muted from \"**{ctx.guild.name}**\" for \"**{time}**\".") 
+                    author_avatar=ctx.author.avatar_url
+                    embed.set_footer(icon_url= author_avatar,text=f"Requested by {ctx.message.author} • Yeet Bot ") 
+                    
+                    try:await mbr.send(embed=embed)
+                    except: 
+                        pass
+                        #print("Cound not send Dm")
+                    
+                    try : 
+                        await mbr.add_roles(role)
+                        warned_names=warned_names+mbr.mention+", "
+                    except : 
+                        await ctx.send("Failed to mute!")
+                    
+
+                else: pass
+            
             embed=discord.Embed(color = random.choice(colourlist),timestamp=ctx.message.created_at)
-            embed.add_field(name="No Permissions",value=f"{ctx.author.mention} You need the Ban Members permission to use this command.") 
-            author_avatar=ctx.author.avatar_url
-            embed.set_footer(icon_url= author_avatar,text=f"Requested by {ctx.message.author} • Yeet Bot ")   
-            await ctx.send(embed=embed,delete_after=4)   
+            if warned_names=="":
+                embed.add_field(name=":mute: | Mute command not executed",value=f"Nobody was muted.This could be the cause of :\n • Mentioned user is not found.\n • Mentioned user is are above/equal to your role.\n • You mentioned yourself \n **Make sure the mentioned user and the mute role is below my highest role.**")
+            else:
+                embed.add_field(name=":mute: | Mute command executed",value=f"**{warned_names}** was muted for **{time}**!")
+            embed.set_footer(icon_url= ctx.author.avatar_url,text=f"Requested by {ctx.message.author} • Yeet Bot ")    
+            await ctx.send(embed=embed)
+
+            await asyncio.sleep(int(time_secs))
+            for mbr in members:
+                try : 
+                    await mbr.remove_roles(role)
+
+                except : 
+                    await ctx.send("Failed to mute!")
+
+
+    @commands.has_permissions(manage_roles=True)
+    @commands.bot_has_permissions(manage_roles=True)
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="Unmute", help='Unmutes a user \n \"Yeet Unmute @User 5m\" or \"Yeet unmute @User @User 10m\".')
+    async def unmute(self,ctx,members: commands.Greedy[discord.Member]):
+            warned_names=""
+            #role = discord.Guild.get_role(self,role_id=748786284385796123)
+            role = get(ctx.guild.roles, id=748786284385796123)
+            if role == None:
+                role = discord.utils.get(ctx.guild.roles, name="Muted")
+                if role == None:
+                    await ctx.send("The muted role was not found.")
+                    return
+            #role = discord.utils.get(ctx.guild.roles, name="Muted")
+            
+            for mbr in members:
+                
+                if mbr == ctx.author: pass
+                
+                elif mbr.top_role < ctx.author.top_role or ctx.author==ctx.guild.owner:                  
+                    try : 
+                        await mbr.remove_roles(role)
+                        warned_names=warned_names+mbr.mention+", "
+                    except : 
+                        await ctx.send("Failed to unmute!")
+                    
+
+                else: pass
+            
+            embed=discord.Embed(color = random.choice(colourlist),timestamp=ctx.message.created_at)
+            if warned_names=="":
+                embed.add_field(name=":speaker:  | Unmute command not executed",value=f"Nobody was unmuted. This could be the cause of :\n • Mentioned user is not found.\n • Mentioned user is are above/equal to your role.\n • You mentioned yourself. \n **Make sure the mentioned user and the mute role is below my highest role.**")
+            else:
+                embed.add_field(name=":speaker:  | Unmute command executed",value=f"**{warned_names}** was unmuted,")
+            embed.set_footer(icon_url= ctx.author.avatar_url,text=f"Requested by {ctx.message.author} • Yeet Bot ")    
+            await ctx.send(embed=embed)
+
+        
+
+
+
+    async def text_input_function(self,ctx,title:str,text:str):
+        question_embed=await ctx.send(embed=discord.Embed(title =title,description=text,color = random.choice(colourlist),timestamp=ctx.message.created_at).set_footer(icon_url= ctx.author.avatar_url,text=f"Requested by {ctx.message.author} • Yeet Bot "))
+        try:
+            text= await self.bot.wait_for('message', timeout=30.0, check=lambda m:(ctx.author == m.author and ctx.channel == m.channel))
+        except asyncio.TimeoutError:
+            await question_embed.edit(embed=discord.Embed(title ="Timeout Error",description="You took too much time, ya retarded monkey",color = random.choice(colourlist),timestamp=ctx.message.created_at).set_footer(icon_url= ctx.author.avatar_url,text=f"Requested by {ctx.message.author} • Yeet Bot "))
+        else: 
+            if len(text.content)> 50:
+                embed=discord.Embed(title="<:warn:789487083802460200> | Too many Characters ",description="How many letters will you type, you retard?",color = random.choice(colourlist))
+                embed.add_field(name="Type only 50 characters in your sentence.",value=f"You typed {len(text.content)} letters, dumbshit! Type the text again.", inline=False)
+                embed.set_footer(icon_url= ctx.author.avatar_url,text=f"Requested by {ctx.message.author} • Yeet Bot ")
+                await ctx.send(embed=embed)
+                return await self.text_input_function(ctx,title,text)
+            else:
+                return str(text.content)
     
 
 

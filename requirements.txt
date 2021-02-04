@@ -1,6 +1,8 @@
 discord.py
 aiohttp
+asyncpip install 
 praw
+#asyncpraw
 asyncpg
 colour
 #urbandict

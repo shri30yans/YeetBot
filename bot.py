@@ -1,4 +1,4 @@
-import os, sys, discord, platform, random, aiohttp, json, time, asyncio
+import os, sys, discord, platform, random, aiohttp, json, time, asyncio,traceback
 from discord.ext import commands,tasks
 from utils.lists import roasts_list
 from discord.ext.commands.cooldowns import BucketType
@@ -57,43 +57,77 @@ class CommandErrorHandler(commands.Cog):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
-
+        
+        if hasattr(ctx.command, 'on_error'):
+            return
 
         if isinstance(error, commands.MissingRequiredArgument):
-            embed=discord.Embed(title="<:warn:779698024212463637> | Missing Argument",description="Oops...You forgot to use your brains. <:emoji_brain:774595551655362591>",color = random.choice(colourlist))
+            embed=discord.Embed(title="<:warn:789487083802460200>  | Missing Argument",description="Oops...You missed an argument.",color = random.choice(colourlist))
             embed.add_field(name="You are missing a required argument.",value="Type \"Yeet help <command-name>\" to learn how to use a command.", inline=False)
             await ctx.send(embed=embed)
 
         elif isinstance(error, commands.MemberNotFound):
-            embed=discord.Embed(title="<:warn:779698024212463637> | Invalid User",description="Brain.exe stopped working. <:emoji_brain:774595551655362591> ", color = random.choice(colourlist))
-            embed.add_field(name="lol you noob",value="Mention a valid user", inline=False)
+            embed=discord.Embed(title="<:warn:789487083802460200>  | Invalid User",description="Mention a valid user", color = random.choice(colourlist))
+            embed.add_field(name="An incorrect user was mentioned",value="Mention a user or a users user id", inline=False)
             await ctx.send(embed=embed)
         
+        elif isinstance(error,commands.CommandNotFound):pass
 
-        elif isinstance(error, commands.CommandNotFound):pass
-        
-        elif isinstance(error, commands.MemberNotFound):
-            embed=discord.Embed(title="<:warn:779698024212463637> | Invalid User",description="Brain.exe stopped working. <:emoji_brain:774595551655362591> ", color = random.choice(colourlist))
-            embed.add_field(name="lol you noob",value="Mention a valid user", inline=False)
+        elif isinstance(error,commands.errors.BadArgument):
+            embed=discord.Embed(title="<:warn:789487083802460200>  | Invalid Argument",color = random.choice(colourlist))
+            embed.add_field(name="You passed a incorrect or invalid argument", value=" Please make sure that you are using the correct format.\n Type \"r help command_name\" to learn how to use a command.", inline=False)
             await ctx.send(embed=embed)
         
+        elif isinstance(error,TypeError):pass
+
+        elif isinstance(error, commands.BotMissingPermissions):
+            missing = [perm.replace('_', ' ').replace('guild', 'server').title() for perm in error.missing_perms]
+            if len(missing) > 2:
+                fmt = '{}, and {}'.format("**, **".join(missing[:-1]), missing[-1])
+            else:
+                fmt = ' and '.join(missing)
+            missing_permissions = 'I need the **{}** permission(s) to run this command.'.format(fmt)
+            embed=discord.Embed(title="<:warn:789487083802460200>  | Bot doesn't have required permissions",color = random.choice(colourlist))
+            embed.add_field(name="Please give me the required permissions and try again.", value=f"{missing_permissions}", inline=False)
+            await ctx.send(embed=embed)
+
+        elif isinstance(error, commands.MissingPermissions):
+            missing = [perm.replace('_', ' ').replace('guild', 'server').title() for perm in error.missing_perms]
+            if len(missing) > 2:
+                fmt = '{}, and {}'.format("**, **".join(missing[:-1]), missing[-1])
+            else:
+                fmt = ' and '.join(missing)
+            missing_permissions = 'You need the **{}** permission(s) to use this command.'.format(fmt)
+            embed=discord.Embed(title="<:warn:789487083802460200>  | Missing Permissions",color = random.choice(colourlist))
+            embed.add_field(name="You don't have the required permissions", value=f"{missing_permissions}", inline=False)
+            await ctx.send(embed=embed)
+        
+        elif isinstance(error, commands.MaxConcurrencyReached):
+            embed=discord.Embed(title="<:warn:789487083802460200>  | Maximimum Concurrency",color = random.choice(colourlist))
+            embed.add_field(name="The same command is currently ongoing in this channel.", value=f"Use a different Channel or wait until the current command is completed.", inline=False)
+            await ctx.send(embed=embed)
+        
+        # elif isinstance(error, commands.UserInputError):
+        #     await ctx.send("Invalid input.")
+        #     await self.send_command_help(ctx)
+        #     return
+
         elif isinstance(error, commands.CommandOnCooldown):
             if ctx.author.id in [571957935270395925]:
                 await ctx.reinvoke()
-            elif ctx.guild.id in [748786284373475358,748754737695948860,774113408378863666]:
-                await ctx.reinvoke()
+            #elif ctx.guild.id in [748786284373475358,748754737695948860,774113408378863666]:
+                #await ctx.reinvoke()
             else:
-                embed=discord.Embed(title="<:warn:779698024212463637> | Command on Cooldown",color = random.choice(colourlist))
+                embed=discord.Embed(title="<:warn:789487083802460200>  | Command on Cooldown",color = random.choice(colourlist))
                 embed.add_field(name="Slow down there, Romeo :rose: :race_car:", value=" Please wait before using this command again. You can use this command in {:.2f} s'seconds again.".format(error.retry_after), inline=False)
                 await ctx.send(embed=embed)
-        
-        
-
-        
         else:
-            embed=discord.Embed(title="<:warn:779698024212463637> | Goddamn Karen!",description="I knew I could count on you for screwing this up...",color = random.choice(colourlist))
-            embed.add_field(name="Something went wrong. Try again later",value=f"{error}", inline=False)
-            #embed.add_field(name="'```py\n%s\n```' % traceback.format_exc()",value="\u200b", inline=False)
+            #traceback=traceback.format_exception(type(error), error, error.__traceback__)
+            embed=discord.Embed(title="<:warn:789487083802460200>  | Goddamn Karen!",description="I knew I could count on you for screwing this up...",color = random.choice(colourlist))
+            #embed.add_field(name='Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
+            #etype, value, tb = sys.exc_info()
+            embed.add_field(name="Something went wrong. Try again later",value=f"{error} \n {traceback.format_exc()}", inline=False)
+
             await ctx.send(embed=embed)
 
 #loop = asyncio.get_event_loop()

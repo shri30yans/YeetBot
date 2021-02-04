@@ -307,6 +307,16 @@ class Fun(commands.Cog,name="Fun"):
         embed.set_footer(icon_url= author_avatar,text=f"Requested by {ctx.message.author} • Yeet Bot ")   
         await ctx.send(embed=embed)
 
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.command(name="Kpop", help="Sends a Kpop gif\n\"Yeet Kpop\"")
+    async def kpop(self,ctx,msg_id:discord.Message=None):
+        kpop_gif_list=["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC0t9fkHjJeW8y-gu5kERYsQoHGe3_Uc8i9Q&usqp=CAU",
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9hlEDtNwihTgyrgoA1_kzbHVAO1Hdsmv9tQ&usqp=CAU",
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7djK532H0K2NsxMPQs-jZBhaJ1nEPzYj3Lw&usqp=CAU",
+                        "https://media.tenor.com/images/b5ee3f811824b0633ececeb46b08a354/tenor.gif"]
+        await ctx.send(random.choice(kpop_gif_list))
+
+
 def setup(bot):
     bot.add_cog(Fun(bot))
 
