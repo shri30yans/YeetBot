@@ -368,7 +368,7 @@ class Utility(commands.Cog):
         if no_of_winners < 0 :
             await ctx.send("You can't have a negative winner, dude.")
         elif no_of_winners == 0 :
-            await ctx.send("No winner?You need to have atleast 1 winner, dumbo.")
+            await ctx.send("No winner? You need to have atleast 1 winner, dumbo.")
         time = await self.text_input_function(ctx,title="How long will the giveaway last?",text="Enter the time")
         pos = ["s","m","h","d"]
         time_dict = {"s" : 1, "m" : 60, "h" : 3600, "d": 3600*24}
@@ -391,13 +391,14 @@ class Utility(commands.Cog):
         elif no_of_winners > 1:
             embed.add_field(name="React with :tada: to enter!",value=f"{no_of_winners} winners")
         embed.set_footer(text=f"Ends in {time} • Yeet Bot ")    
-        giveaway_msg=await channel.send(embed=embed)
+        giveaway_msg = await channel.send(embed=embed)
         await giveaway_msg.add_reaction("\U0001f389")
         await asyncio.sleep(int(time_secs))
         # print(giveaway_msg.reactions)
         # winner=random.choice(giveaway_msg.reactions)
         # await ctx.send(f"{winner.user.mention} won the giveaway")
-        giveaway_msg = await channel.fetch_message(giveaway_msg.id)
+        new_msg = await channel.fetch_message(giveaway_msg.id)
+        giveaway_msg = new_msg
         users = await giveaway_msg.reactions[0].users().flatten()
         users.pop(users.index(self.bot.user))
         if no_of_winners > len(users):
