@@ -8,13 +8,10 @@ if not os.path.isfile("config.py"):
 	sys.exit("'config.py' not found! Please add it and try again.")
 else:
 	import config
-
-
+from dotenv import load_dotenv
 
 colourlist=[0xCCFF00,0x00C2C7,0x006163,0xE67E22,0xC14DF0,0xEC4451,0xFAED2E,0x2E75FA,0xFA782E,
             0x2EFAD2,0xFF729D,0xA172FF,0x72A3FF,0xFF0000,0x0DAA00,0x171EFF,0x8BD6F9,0x8E44AD,0x9B59B6,]
-
-
 
 #bot
 intents = discord.Intents.default()
@@ -23,11 +20,11 @@ intents.members = True
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or("yeet ","y ","Y ","Yeet "),case_insensitive = True,intents = intents,help_command=EmbedHelpCommand())
 #bot = commands.Bot(command_prefix=commands.when_mentioned_or("Beta ","beta "),case_insensitive = True,intents = intents,help_command=EmbedHelpCommand())
+
 #declarations
-#TOKEN = os.getenv("DISCORD_TOKEN")
-TOKEN = "NzUwMjM2MjIwNTk1ODk2Mzcw.X03l7Q.sC1NA7kusFCB778Em5aw0LyNVTo"
-#Beta
-#TOKEN = "Nzc4NTc0NzU2NjA0NTQzMDI2.X7T-Pw.r4of7QgJV686GLsLutR6lZjHEBU"
+load_dotenv()
+TOKEN = os.getenv("DISCORD_TOKEN")
+print(TOKEN)
 
 for extension in config.STARTUP_COGS:
 		try:
@@ -68,7 +65,7 @@ class CommandErrorHandler(commands.Cog):
 
         elif isinstance(error, commands.MemberNotFound):
             embed=discord.Embed(title="<:warn:789487083802460200>  | Invalid User",description="Mention a valid user", color = random.choice(colourlist))
-            embed.add_field(name="An incorrect user was mentioned",value="Mention a user or a users user id", inline=False)
+            embed.add_field(name="An incorrect user was mentioned",value="Mention a user or a user's user id", inline=False)
             await ctx.send(embed=embed)
         
         elif isinstance(error,commands.CommandNotFound):pass

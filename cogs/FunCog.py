@@ -1,8 +1,13 @@
-import os, sys, discord, platform, random, aiohttp, json,time,asyncio,requests
+import os, sys, discord, platform, random, aiohttp, json,time,asyncio,requests,pathlib
 from discord.ext import commands,tasks,menus
 from utils.lists import roasts_list
 from discord.ext.commands import Greedy
 from discord.ext.commands.cooldowns import BucketType
+from PIL import Image, ImageDraw, ImageFont,ImageFilter,ImageOps
+import utils.addtext,utils.image_effects
+from io import BytesIO
+from typing import Union
+MediaDir = pathlib.Path(__file__).parent / "Media"
 if not os.path.isfile("config.py"):
     sys.exit("'config.py' not found! Please add it and try again.")
 else:
@@ -257,6 +262,55 @@ class Fun(commands.Cog,name="Fun"):
 
         finally:
             await ctx.send(response)
+
+
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="Ship", help='Ship 2 people together \n\"Yeet ship @user\" OR \"Yeet ship @user1 @user2\"')
+    async def ship(self,ctx,user1:discord.Member,user2:discord.Member=None):
+        if (user2 == None):
+            user2 = user1
+            user1 = ctx.author
+        ship_percent= str(random.randint(1,101))
+        async with ctx.typing():
+            #gets discord.Asset
+            ship_template = Image.open(MediaDir / "yeetbotship.png")
+            user1_avatar = user1.avatar_url_as(static_format="png")
+            user2_avatar = user2.avatar_url_as(static_format="png")
+            #Converts it into bytes
+            bytes = await user1_avatar.read()
+            #converts it into a PIL Image object
+            with Image.open(BytesIO(bytes)) as my_image:
+                # open the pic and give it an alpha channel so it's transparent
+                my_image= my_image.resize((700, 700)).convert("RGBA")
+                Final_Image = ship_template.copy()
+                # note the second appearance of my_image, that's necessary to paste without a bg
+                Final_Image.paste(my_image,(98,450))
+            
+            bytes = await user2_avatar.read()
+            #converts it into a PIL Image object
+            with Image.open(BytesIO(bytes)) as my_image:
+                # open the pic and give it an alpha channel so it's transparent
+                my_image= my_image.resize((700, 700)).convert("RGBA")
+                #Final_Image = ship_template.copy()
+                # note the second appearance of my_image, that's necessary to paste without a bg
+                Final_Image.paste(my_image,(700,450))
+
+            #Final_Image.show()
+            Final_Image.save('Yeet_Bot_Shipped.png')
+            embed = embed=discord.Embed(title = f"{user1.name} is {ship_percent}% made for {user2.name}",decription="Wow what a match", color =0x660099)
+            embed.set_image(url="attachment://'Yeet_Bot_Shipped.png'")
+            embed.set_footer(icon_url= ctx.author.avatar_url,text=f"Requested by {ctx.message.author} • Yeet Bot ")
+            await ctx.send(file=discord.File('Yeet_Bot_Shipped.png'),embed=embed)
+            os.remove("Yeet_Bot_Shipped.png")
+
+            # output_buffer = BytesIO()
+            # image.save(output_buffer, "png")  # or whatever format
+            # output_buffer.seek(0)
+            # await ctx.send(file=discord.File(fp=output_buffer, filename="Created-Meme-Yeet_Bot.png"))
+
+        
+        
+
         
     
     '''@commands.cooldown(1, 3, commands.BucketType.user)
