@@ -24,7 +24,6 @@ bot = commands.Bot(command_prefix=commands.when_mentioned_or("yeet ","y ","Y ","
 #declarations
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
-print(TOKEN)
 
 for extension in config.STARTUP_COGS:
 		try:
