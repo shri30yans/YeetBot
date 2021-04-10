@@ -1,4 +1,4 @@
-import os, sys, discord, platform, random, aiohttp, json,time,asyncio,requests,pathlib
+import os, sys, discord, platform, random, aiohttp, json,time,asyncio,requests,pathlib,re
 from discord.ext import commands,tasks,menus
 from utils.lists import roasts_list
 from discord.ext.commands import Greedy
@@ -261,8 +261,11 @@ class Fun(commands.Cog,name="Fun"):
             await ctx.send(embed=except_embed,delete_after=10) 
 
         finally:
+            role_check = re.search("<@&.*>$",response)#regex
             if "@everyone" in response or "@here" in response:
-                await ctx.send("Lmao who you trying to fool?")
+                await ctx.send("stop it. get some help")
+            elif role_check:
+                await ctx.send("no")
             else:
                 await ctx.send(response)
 
