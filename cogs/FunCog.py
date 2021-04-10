@@ -261,7 +261,7 @@ class Fun(commands.Cog,name="Fun"):
             await ctx.send(embed=except_embed,delete_after=10) 
 
         finally:
-            if "@everyone" in response:
+            if "@everyone" in response or "@here" in response:
                 await ctx.send("Lmao who you trying to fool?")
             else:
                 await ctx.send(response)
