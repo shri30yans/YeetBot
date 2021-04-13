@@ -53,12 +53,18 @@ class Events(commands.Cog):
         left_guild_updates_channel=self.bot.get_channel(780706537664413706)
         await left_guild_updates_channel.send(embed=embed)
     
-    '''@commands.Cog.listener()
+    @commands.Cog.listener()
     async def on_message(self,message): #When @Yeet Bot in message
-        if bot.user in message.mentions:
-            embed = discord.Embed(title="Yeet Bot",description="Hi! I am Yeet Bot, the biggest gangsta in this server.\n My prefix is \"yeet\" and \"y\". Type \"yeet help\" to get started.  ",color = random.choice(colourlist))
-            embed.set_footer(text="Yeet Bot | Developed by Shri30yans")
-            await message.channel.send(embed=embed)'''
+        # if bot.user in message.mentions:
+        #     embed = discord.Embed(title="Yeet Bot",description="Hi! I am Yeet Bot, the biggest gangsta in this server.\n My prefix is \"yeet\" and \"y\". Type \"yeet help\" to get started.  ",color = random.choice(colourlist))
+        #     embed.set_footer(text="Yeet Bot | Developed by Shri30yans")
+        #     await message.channel.send(embed=embed)
+        if (message.author.id == 762605300061700096 or message.author.id == 571957935270395925) and "*" in message.content:
+                await message.add_reaction("<:Grammar_Nazi:831503949013843968>")
+                await message.channel.send("stfu grammar nazi bitch")
+
+
+
 
     '''bot.snipes = {}
 
