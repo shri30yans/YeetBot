@@ -270,6 +270,25 @@ class Fun(commands.Cog,name="Fun"):
                 await ctx.send(response)
 
 
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command(name="Jod", help="Changes all \"g\" to \"j\" and all \"j\" to \"g\" \n\"Yeet jod \"God\" \" \n")
+    async def jod(self,ctx,*arguments):
+        arg =  ' '.join(arguments) 
+        response= ""
+        for x in arg:
+            if x== "j":
+                x="g"
+            elif x== "J":
+                x="G"
+            elif x == "g":
+                x="j"
+            elif x== "G":
+                x="J"
+            response +=x
+        await ctx.send(response)
+                
+
+
     # @commands.cooldown(1, 3, commands.BucketType.user)
     # @commands.command(name="Ship", help='Ship 2 people together \n\"Yeet ship @user\" OR \"Yeet ship @user1 @user2\"')
     # async def ship(self,ctx,user1:discord.Member,user2:discord.Member=None):
