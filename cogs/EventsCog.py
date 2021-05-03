@@ -59,7 +59,7 @@ class Events(commands.Cog):
         #     embed = discord.Embed(title="Yeet Bot",description="Hi! I am Yeet Bot, the biggest gangsta in this server.\n My prefix is \"yeet\" and \"y\". Type \"yeet help\" to get started.  ",color = random.choice(colourlist))
         #     embed.set_footer(text="Yeet Bot | Developed by Shri30yans")
         #     await message.channel.send(embed=embed)
-        if (message.author.id == 762605300061700096 or message.author.id == 682899218695847974) and "*" in message.content:
+        if (message.author.id == 762605300061700096 or message.author.id == 682899218695847974) and message.content.count("*") == 1:
                 await message.add_reaction("<:Grammar_Nazi:831503949013843968>")
                 await message.channel.send("stfu grammar nazi bitch")
         if "https://cdn.discordapp.com/attachments/748786284599705688/832481246923849748/B612_20190802_224553_592.mp4" in message.content:
