@@ -61,9 +61,9 @@ class Events(commands.Cog):
         #     await message.channel.send(embed=embed)
         if (message.author.id == 762605300061700096 or message.author.id == 682899218695847974) and message.content.count("*") == 1:
                 await message.add_reaction("<:Grammar_Nazi:831503949013843968>")
-                await message.channel.send("stfu grammar nazi bitch")
-        if "https://cdn.discordapp.com/attachments/748786284599705688/832481246923849748/B612_20190802_224553_592.mp4" in message.content:
-            await message.delete()
+        
+        if "looser" in message.content:
+            await message.channel.send(f"{message.author.mention} you are the real loser here")
 
 
 
