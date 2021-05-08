@@ -62,7 +62,7 @@ class Events(commands.Cog):
         if (message.author.id == 762605300061700096 or message.author.id == 682899218695847974) and message.content.count("*") == 1:
                 await message.add_reaction("<:Grammar_Nazi:831503949013843968>")
         
-        if "looser" in message.content:
+        if "looser" in message.content.lower():
             await message.channel.send(f"{message.author.mention} you are the real loser here")
 
 
