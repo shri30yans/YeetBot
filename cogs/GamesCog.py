@@ -138,11 +138,11 @@ class Games(commands.Cog):
                                         
                                         elif attack =="Cataclyst":
                                             challenged_health=max(challenged_health-15,0) 
-                                            challenger_health=max(challenger_health-10,0)
+                                            challenger_health=max(challenger_health-5,0)
                                             challenger_damage_done=0                 
                                             challenger_healthbar,challenged_healthbar,challenger_damage_done_bar,challenged_damage_done_bar=self.healthbar_generator(challenger_health,challenged_health,challenger_damage_done,challenged_damage_done)                 
                                             embed=discord.Embed(title=f"**{challenger.name} used their special attack and got the *Cataclyst* **",color = 0x5AFF00,timestamp=ctx.message.created_at)
-                                            embed.add_field(name=f"**{challenger.name} reduced {challenged.name}'s special attack to zero and dealed 15 damage, but at the cost of 10 damage to themselves**",value=f"{challenger.name.ljust(max_length_of_player_names)}  {challenger_healthbar}  {challenger_health}\nSpecial attack: {challenger_damage_done_bar} {challenger_damage_done} \n{challenged.name.ljust(max_length_of_player_names)} {challenged_healthbar} {challenged_health}\nSpecial attack: {challenged_damage_done_bar} {challenged_damage_done} ") 
+                                            embed.add_field(name=f"**{challenger.name} reduced {challenged.name}'s special attack to zero and dealt 15 damage, but at the cost of 5 damage to themselves**",value=f"{challenger.name.ljust(max_length_of_player_names)}  {challenger_healthbar}  {challenger_health}\nSpecial attack: {challenger_damage_done_bar} {challenger_damage_done} \n{challenged.name.ljust(max_length_of_player_names)} {challenged_healthbar} {challenged_health}\nSpecial attack: {challenged_damage_done_bar} {challenged_damage_done} ") 
                                         
                                         elif attack =="Shield":
                                             challenger_inventory.append("Shield")
