@@ -1,13 +1,16 @@
 import os, sys, discord, platform, random, aiohttp, json,time,asyncio
 from discord.ext import commands,tasks
 import praw,prawcore
+import config
+
 colourlist=[0xCCFF00,0x00C2C7,0x006163,0xE67E22,0xC14DF0,0xEC4451,0xFAED2E,0x2E75FA,0xFA782E,
             0x2EFAD2,0xFF729D,0xA172FF,0x72A3FF,0xFF0000,0x0DAA00,0x171EFF,0x8BD6F9,0x8E44AD,0x9B59B6,]
 
+
 reddit = praw.Reddit(
-     client_id="us0vshvKCbFtaQ",
-     client_secret="gAgY9u07CSK3nUqWRkCPbvvvqSvEzA",
-     user_agent="u/Shri30yans Yeet Bot",
+     client_id=config.client_id,
+     client_secret=config.client_secret,
+     user_agent=config.user_agent,
      check_for_async=False
  )
 
