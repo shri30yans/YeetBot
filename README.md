@@ -24,7 +24,7 @@ To run the bot you would have to create a .env with a Variable DISCORD_TOKEN tha
 *Space Commands*
      
 ![Wanted](https://github.com/shri30yans/YeetBot/blob/master/Images/image_manipulation.jpg)   
-*Image manipulation with PIL*  
+*Image manipulation with PIL*   
 
 ![Help Command](https://github.com/shri30yans/YeetBot/blob/master/Images/help.jpg)   
 *Other Commands*   
