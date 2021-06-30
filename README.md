@@ -1,8 +1,7 @@
-# yeetbot
-This is my first discord bot and the first big Python Project that I have undertaken.
-It is a simple bot with a few Utility and meme commands that I was expermenting with.
-To run the bot you would have to create a .env with a Variable DISCORD_TOKEN that would be assigned your bot's discord token.
 ## ***Yeet Bot***
+This is my first Discord Bot.
+It is a simple bot with a few Utility and meme commands.
+
 ### Functions:
 
 * Post's Memes from Reddit
@@ -14,19 +13,19 @@ To run the bot you would have to create a .env with a Variable DISCORD_TOKEN tha
 * Other of Memey commands
 
 ### Pictures:
-![Meme](https://github.com/shri30yans/YeetBot/blob/master/Images/meme.jpg)   
-*Post's memes from Reddit*   
+![Meme](https://github.com/shri30yans/YeetBot/blob/main/Images/meme.jpg)   
+*Post's memes from Reddit* 
 
-![Reddit Search](https://github.com/shri30yans/YeetBot/blob/master/Images/reddit_search.jpg)   
+![Reddit Search](https://github.com/shri30yans/YeetBot/blob/main/Images/reddit_search.jpg)   
 *Getting post's from subreddit*   
  
-![Space](https://github.com/shri30yans/YeetBot/blob/master/Images/space.jpg)   
+![Space](https://github.com/shri30yans/YeetBot/blob/main/Images/space.jpg)   
 *Space Commands*
      
-![Wanted](https://github.com/shri30yans/YeetBot/blob/master/Images/image_manipulation.jpg)   
-*Image manipulation with PIL*   
+![Wanted](https://github.com/shri30yans/YeetBot/blob/main/Images/image_manipulation.jpg)   
+*Image manipulation with PIL*  
 
-![Help Command](https://github.com/shri30yans/YeetBot/blob/master/Images/help.jpg)   
+![Help Command](https://github.com/shri30yans/YeetBot/blob/main/Images/help.jpg)   
 *Other Commands*   
 
 
